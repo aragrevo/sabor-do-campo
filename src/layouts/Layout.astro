@@ -57,13 +57,13 @@ const { title, showUserInfo = true } = Astro.props;
     </main>
 
     <script>
-        import AuthService from '@/services/authService.js';
+        import { AuthService } from '@/services/authService.js';
 
         // Verificar si el usuario está logueado y mostrar información
-        function checkUserStatus() {
-            if (AuthService.isAuthenticated()) {
-                const userInfo = AuthService.getCurrentUser();
-                updateUserInfo(userInfo.username);
+        async function checkUserStatus() {
+            if (await AuthService.isAuthenticated()) {
+                const userInfo = await AuthService.getCurrentUser();
+                updateUserInfo(userInfo.name || userInfo.email);
             }
         }
 
@@ -79,9 +79,9 @@ const { title, showUserInfo = true } = Astro.props;
         }
 
         // Función de logout
-        function logout() {
+        async function logout() {
             if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                AuthService.logout();
+                await AuthService.logout();
                 window.location.href = '/login';
             }
         }

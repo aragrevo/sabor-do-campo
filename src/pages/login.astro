@@ -16,18 +16,18 @@ import Layout from "@/layouts/Layout.astro";
       <form id="loginForm" class="space-y-6">
         <div>
           <label
-            for="username"
+            for="email"
             class="mb-2 block text-sm font-medium text-gray-700"
           >
-            Usuario
+            Email
           </label>
           <input
-            type="text"
-            id="username"
-            name="username"
+            type="email"
+            id="email"
+            name="email"
             required
             class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-green-500"
-            placeholder="Ingresa tu usuario"
+            placeholder="Ingresa tu email"
           />
         </div>
 
@@ -61,48 +61,130 @@ import Layout from "@/layouts/Layout.astro";
         id="errorMessage"
         class="mt-4 hidden rounded-lg border border-red-400 bg-red-100 p-3 text-red-700"
       >
-        Usuario o contraseña incorrectos
+        Error de autenticación
       </div>
 
-      <!-- Información de Credenciales -->
-      <div class="mt-8 rounded-lg border border-blue-200 bg-blue-50 p-4">
+      <!-- Información de Registro -->
+      <!-- <div class="mt-8 rounded-lg border border-blue-200 bg-blue-50 p-4">
         <h3 class="mb-2 font-semibold text-blue-800">
-          Credenciales de prueba:
+          ¿No tienes cuenta?
         </h3>
         <p class="text-sm text-blue-700">
-          <strong>Usuario:</strong> admin<br />
-          <strong>Contraseña:</strong> admin123
+          Regístrate con tu email y contraseña para acceder al sistema.
         </p>
-      </div>
+        <button
+          id="showRegisterBtn"
+          class="mt-2 text-sm font-medium text-blue-600 hover:text-blue-800"
+        >
+          Crear cuenta nueva
+        </button>
+      </div> -->
+
+      <!-- Formulario de Registro (oculto inicialmente) -->
+      <!-- <div id="registerForm" class="mt-6 hidden">
+        <h3 class="mb-4 text-lg font-semibold text-gray-800">Crear Cuenta</h3>
+        <form id="registerFormElement" class="space-y-4">
+          <div>
+            <label for="registerName" class="mb-2 block text-sm font-medium text-gray-700">
+              Nombre
+            </label>
+            <input
+              type="text"
+              id="registerName"
+              name="name"
+              required
+              class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-green-500"
+              placeholder="Tu nombre completo"
+            />
+          </div>
+          <div>
+            <label for="registerEmail" class="mb-2 block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <input
+              type="email"
+              id="registerEmail"
+              name="email"
+              required
+              class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-green-500"
+              placeholder="tu@email.com"
+            />
+          </div>
+          <div>
+            <label for="registerPassword" class="mb-2 block text-sm font-medium text-gray-700">
+              Contraseña
+            </label>
+            <input
+              type="password"
+              id="registerPassword"
+              name="password"
+              required
+              minlength="6"
+              class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-green-500"
+              placeholder="Mínimo 6 caracteres"
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-700"
+          >
+            Crear Cuenta
+          </button>
+          <button
+            type="button"
+            id="cancelRegisterBtn"
+            class="w-full rounded-lg border border-gray-300 px-4 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-50"
+          >
+            Cancelar
+          </button>
+        </form>
+      </div> -->
     </div>
   </div>
 </Layout>
 
 <script>
-  import AuthService from "@/services/authService.js";
+  import { AuthService } from "@/services/authService.js";
 
   // Referencias a elementos del DOM
   const loginForm = document.getElementById("loginForm");
+  const registerFormElement = document.getElementById("registerFormElement");
+  const registerForm = document.getElementById("registerForm");
+  const showRegisterBtn = document.getElementById("showRegisterBtn");
+  const cancelRegisterBtn = document.getElementById("cancelRegisterBtn");
   const errorMessage = document.getElementById("errorMessage");
 
   // Verificar si ya está logueado al cargar la página
-  function checkAuthStatus() {
-    if (AuthService.isAuthenticated()) {
+  async function checkAuthStatus() {
+    const isAuth = await AuthService.isAuthenticated();
+    if (isAuth) {
       // Redirigir a productos si ya está logueado
       window.location.href = "/productos";
     }
   }
 
-  // Manejar envío del formulario
+  // Mostrar/ocultar formulario de registro
+  // showRegisterBtn.addEventListener("click", () => {
+  //   registerForm.classList.remove("hidden");
+  //   showRegisterBtn.parentElement.classList.add("hidden");
+  // });
+
+  // cancelRegisterBtn.addEventListener("click", () => {
+  //   registerForm.classList.add("hidden");
+  //   showRegisterBtn.parentElement.classList.remove("hidden");
+  //   registerFormElement.reset();
+  // });
+
+  // Manejar envío del formulario de login
   loginForm.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
     try {
       // Usar el servicio de autenticación
-      const result = await AuthService.login(username, password);
+      const result = await AuthService.login(email, password);
 
       if (result.success) {
         // Login exitoso - redirigir a productos
@@ -115,10 +197,10 @@ import Layout from "@/layouts/Layout.astro";
         // Limpiar campo de contraseña
         document.getElementById("password").value = "";
 
-        // Ocultar error después de 3 segundos
+        // Ocultar error después de 5 segundos
         setTimeout(() => {
           errorMessage.classList.add("hidden");
-        }, 3000);
+        }, 5000);
       }
     } catch (error) {
       // Error inesperado
@@ -127,19 +209,80 @@ import Layout from "@/layouts/Layout.astro";
 
       setTimeout(() => {
         errorMessage.classList.add("hidden");
-      }, 3000);
+      }, 5000);
     }
   });
+
+  // Manejar envío del formulario de registro
+  // registerFormElement.addEventListener("submit", async function (e) {
+  //   e.preventDefault();
+
+  //   const name = document.getElementById("registerName").value.trim();
+  //   const email = document.getElementById("registerEmail").value.trim();
+  //   const password = document.getElementById("registerPassword").value;
+
+  //   try {
+  //     // Usar el servicio de autenticación para registro
+  //     const result = await AuthService.register(email, password, name);
+
+  //     if (result.success) {
+  //       // Registro exitoso - mostrar mensaje y ocultar formulario
+  //       errorMessage.className = "mt-4 rounded-lg border border-green-400 bg-green-100 p-3 text-green-700";
+  //       errorMessage.textContent = result.message;
+  //       errorMessage.classList.remove("hidden");
+
+  //       // Ocultar formulario de registro
+  //       registerForm.classList.add("hidden");
+  //       showRegisterBtn.parentElement.classList.remove("hidden");
+  //       registerFormElement.reset();
+
+  //       // Ocultar mensaje después de 8 segundos
+  //       setTimeout(() => {
+  //         errorMessage.classList.add("hidden");
+  //         errorMessage.className = "mt-4 hidden rounded-lg border border-red-400 bg-red-100 p-3 text-red-700";
+  //       }, 8000);
+  //     } else {
+  //       // Mostrar error
+  //       errorMessage.textContent = result.message;
+  //       errorMessage.classList.remove("hidden");
+
+  //       setTimeout(() => {
+  //         errorMessage.classList.add("hidden");
+  //       }, 5000);
+  //     }
+  //   } catch (error) {
+  //     // Error inesperado
+  //     errorMessage.textContent = "Error inesperado en el registro. Intente nuevamente.";
+  //     errorMessage.classList.remove("hidden");
+
+  //     setTimeout(() => {
+  //       errorMessage.classList.add("hidden");
+  //     }, 5000);
+  //   }
+  // });
 
   // Verificar estado al cargar la página
   checkAuthStatus();
 
-  // Limpiar error al escribir
-  document.getElementById("username").addEventListener("input", () => {
+  // Limpiar error al escribir en login
+  document.getElementById("email").addEventListener("input", () => {
     errorMessage.classList.add("hidden");
   });
 
   document.getElementById("password").addEventListener("input", () => {
     errorMessage.classList.add("hidden");
   });
+
+  // Limpiar error al escribir en registro
+  // document.getElementById("registerName").addEventListener("input", () => {
+  //   errorMessage.classList.add("hidden");
+  // });
+
+  // document.getElementById("registerEmail").addEventListener("input", () => {
+  //   errorMessage.classList.add("hidden");
+  // });
+
+  // document.getElementById("registerPassword").addEventListener("input", () => {
+  //   errorMessage.classList.add("hidden");
+  // });
 </script>
