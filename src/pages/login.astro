@@ -1,0 +1,145 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout title="Login - Sabor del Campo" showUserInfo={false}>
+  <!-- Contenido Principal -->
+  <div class="max-w-md mx-auto mt-16 p-6">
+    <div class="bg-white rounded-xl shadow-lg p-8">
+      <div class="text-center mb-8">
+        <div class="text-6xl mb-4">🔐</div>
+        <h2 class="text-3xl font-bold text-gray-800 mb-2">Iniciar Sesión</h2>
+        <p class="text-gray-600">Accede a la gestión de productos</p>
+      </div>
+
+      <!-- Formulario de Login -->
+      <form id="loginForm" class="space-y-6">
+        <div>
+          <label
+            for="username"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Usuario
+          </label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            placeholder="Ingresa tu usuario"
+          />
+        </div>
+
+        <div>
+          <label
+            for="password"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Contraseña
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            required
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            placeholder="Ingresa tu contraseña"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-medium"
+        >
+          Iniciar Sesión
+        </button>
+      </form>
+
+      <!-- Mensaje de Error -->
+      <div
+        id="errorMessage"
+        class="hidden mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg"
+      >
+        Usuario o contraseña incorrectos
+      </div>
+
+      <!-- Información de Credenciales -->
+      <div class="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <h3 class="font-semibold text-blue-800 mb-2">
+          Credenciales de prueba:
+        </h3>
+        <p class="text-sm text-blue-700">
+          <strong>Usuario:</strong> admin<br />
+          <strong>Contraseña:</strong> admin123
+        </p>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import AuthService from "@/services/authService.js";
+
+  // Referencias a elementos del DOM
+  const loginForm = document.getElementById("loginForm");
+  const errorMessage = document.getElementById("errorMessage");
+
+  // Verificar si ya está logueado al cargar la página
+  function checkAuthStatus() {
+    if (AuthService.isAuthenticated()) {
+      // Redirigir a productos si ya está logueado
+      window.location.href = "/productos";
+    }
+  }
+
+  // Manejar envío del formulario
+  loginForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value;
+
+    try {
+      // Usar el servicio de autenticación
+      const result = await AuthService.login(username, password);
+
+      if (result.success) {
+        // Login exitoso - redirigir a productos
+        window.location.href = "/productos";
+      } else {
+        // Mostrar error
+        errorMessage.textContent = result.message;
+        errorMessage.classList.remove("hidden");
+
+        // Limpiar campo de contraseña
+        document.getElementById("password").value = "";
+
+        // Ocultar error después de 3 segundos
+        setTimeout(() => {
+          errorMessage.classList.add("hidden");
+        }, 3000);
+      }
+    } catch (error) {
+      // Error inesperado
+      errorMessage.textContent = "Error inesperado. Intente nuevamente.";
+      errorMessage.classList.remove("hidden");
+
+      setTimeout(() => {
+        errorMessage.classList.add("hidden");
+      }, 3000);
+    }
+  });
+
+  // Verificar estado al cargar la página
+  checkAuthStatus();
+
+  // Limpiar error al escribir
+  document.getElementById("username").addEventListener("input", () => {
+    errorMessage.classList.add("hidden");
+  });
+
+  document.getElementById("password").addEventListener("input", () => {
+    errorMessage.classList.add("hidden");
+  });
+</script>

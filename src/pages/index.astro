@@ -1,330 +1,315 @@
 ---
-import "../styles/global.css";
+import Layout from "@/layouts/Layout.astro";
 ---
 
-<html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>Sabor del Campo - Calculadora de Ventas</title>
-  </head>
-  <body class="bg-gradient-to-br from-green-50 to-emerald-100 min-h-screen">
-    <div class="container mx-auto px-4 py-8 overflow-scroll">
-      <!-- Header -->
-      <header class="text-center mb-12">
-        <h1 class="text-4xl font-bold text-green-800 mb-2">
-          🌾 Sabor del Campo
-        </h1>
-        <p class="text-green-600 text-lg">
-          Calculadora de Porcentajes de Venta
-        </p>
-      </header>
+<Layout title="Calculadora de Precios - Sabor del Campo">
+  <div class="max-w-6xl mx-auto p-6">
+    <!-- Encabezado -->
+    <header class="text-center mb-8">
+      <div class="text-6xl mb-4">🧮</div>
+      <h2 class="text-4xl font-bold text-gray-800 mb-2">
+        Calculadora de Precios
+      </h2>
+      <p class="text-gray-600 text-lg">
+        Calcula el precio de venta y gestiona descuentos para tu tienda
+      </p>
+    </header>
 
-      <!-- Main Calculator Card -->
-      <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">
-          Calculadora de Precios
-        </h2>
+    <!-- Main Calculator Card -->
+    <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">
+        Calculadora de Precios
+      </h2>
 
-        <!-- Calculator Form -->
-        <form id="calculator-form" class="space-y-6">
-          <!-- Precio de Costo -->
-          <div>
-            <label
-              for="cost-price"
-              class="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Precio de Costo (€)
-            </label>
-            <input
-              type="number"
-              id="cost-price"
-              step="0.01"
-              min="0"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="Ingrese el precio de costo"
-            />
-          </div>
+      <!-- Calculator Form -->
+      <form id="calculator-form" class="space-y-6">
+        <!-- Precio de Costo -->
+        <div>
+          <label
+            for="cost-price"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Precio de Costo (€)
+          </label>
+          <input
+            type="number"
+            id="cost-price"
+            step="0.01"
+            min="0"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            placeholder="Ingrese el precio de costo"
+          />
+        </div>
 
-          <!-- Porcentaje de Ganancia -->
-          <div>
-            <label
-              for="profit-percentage"
-              class="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Porcentaje de Ganancia (%)
-            </label>
-            <input
-              type="number"
-              id="profit-percentage"
-              step="0.1"
-              value="20"
-              min="0"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              placeholder="Ingrese el porcentaje de ganancia"
-            />
-          </div>
+        <!-- Porcentaje de Ganancia -->
+        <div>
+          <label
+            for="profit-percentage"
+            class="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Porcentaje de Ganancia (%)
+          </label>
+          <input
+            type="number"
+            id="profit-percentage"
+            step="0.1"
+            value="20"
+            min="0"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            placeholder="Ingrese el porcentaje de ganancia"
+          />
+        </div>
 
-          <!-- Botones de Cálculo -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <button
-              type="button"
-              id="calculate-sale-price"
-              class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200"
-            >
-              Calcular Precio de Venta
-            </button>
-            <!-- <button
+        <!-- Botones de Cálculo -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <button
+            type="button"
+            id="calculate-sale-price"
+            class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200"
+          >
+            Calcular Precio de Venta
+          </button>
+          <!-- <button
               type="button"
               id="calculate-discount"
               class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition duration-200"
             >
               Calcular con Descuento
             </button> -->
-          </div>
-
-          <!-- Campo de Descuento (inicialmente oculto) -->
-          <div id="discount-section" class="hidden">
-            <label
-              for="discount-percentage"
-              class="block text-sm font-medium text-gray-700 mb-2"
-            >
-              Porcentaje de Descuento (%)
-            </label>
-            <input
-              type="number"
-              id="discount-percentage"
-              step="0.1"
-              min="0"
-              max="100"
-              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Ingrese el porcentaje de descuento"
-            />
-          </div>
-        </form>
-
-        <!-- Results Section -->
-        <div id="results" class="mt-8 p-6 bg-gray-50 rounded-lg hidden">
-          <h3 class="text-lg font-semibold text-gray-800 mb-4">Resultados:</h3>
-          <div class="space-y-3">
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Precio de Costo:</span>
-              <span id="result-cost" class="font-semibold text-gray-800"
-                >$0.00</span
-              >
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Ganancia:</span>
-              <span id="result-profit" class="font-semibold text-green-600"
-                >$0.00</span
-              >
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600">Precio de Venta:</span>
-              <span id="result-sale-price" class="font-semibold text-blue-600"
-                >$0.00</span
-              >
-            </div>
-            <div id="discount-result" class="hidden">
-              <div class="flex justify-between items-center">
-                <span class="text-gray-600">Descuento:</span>
-                <span id="result-discount" class="font-semibold text-red-600"
-                  >$0.00</span
-                >
-              </div>
-              <div class="flex justify-between items-center border-t pt-2">
-                <span class="text-gray-800 font-semibold">Precio Final:</span>
-                <span
-                  id="result-final-price"
-                  class="font-bold text-lg text-green-700">$0.00</span
-                >
-              </div>
-            </div>
-          </div>
         </div>
 
-        <!-- Clear Button -->
-        <div class="mt-6 text-center">
-          <button
-            type="button"
-            id="clear-form"
-            class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
+        <!-- Campo de Descuento (inicialmente oculto) -->
+        <div id="discount-section" class="hidden">
+          <label
+            for="discount-percentage"
+            class="block text-sm font-medium text-gray-700 mb-2"
           >
-            Limpiar
-          </button>
+            Porcentaje de Descuento (%)
+          </label>
+          <input
+            type="number"
+            id="discount-percentage"
+            step="0.1"
+            min="0"
+            max="100"
+            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Ingrese el porcentaje de descuento"
+          />
+        </div>
+      </form>
+
+      <!-- Results Section -->
+      <div id="results" class="mt-8 p-6 bg-gray-50 rounded-lg hidden">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Resultados:</h3>
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Precio de Costo:</span>
+            <span id="result-cost" class="font-semibold text-gray-800"
+              >$0.00</span
+            >
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Ganancia:</span>
+            <span id="result-profit" class="font-semibold text-green-600"
+              >$0.00</span
+            >
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-gray-600">Precio de Venta:</span>
+            <span id="result-sale-price" class="font-semibold text-blue-600"
+              >$0.00</span
+            >
+          </div>
+          <div id="discount-result" class="hidden">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Descuento:</span>
+              <span id="result-discount" class="font-semibold text-red-600"
+                >$0.00</span
+              >
+            </div>
+            <div class="flex justify-between items-center border-t pt-2">
+              <span class="text-gray-800 font-semibold">Precio Final:</span>
+              <span
+                id="result-final-price"
+                class="font-bold text-lg text-green-700">$0.00</span
+              >
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Info Cards -->
-      <div
-        class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 max-w-4xl mx-auto"
-      >
-        <div class="bg-white rounded-lg shadow-md p-6 text-center">
-          <div class="text-3xl mb-3">📊</div>
-          <h3 class="font-semibold text-gray-800 mb-2">Cálculo Preciso</h3>
-          <p class="text-gray-600 text-sm">
-            Calcula precios de venta con márgenes de ganancia exactos
-          </p>
-        </div>
-        <div class="bg-white rounded-lg shadow-md p-6 text-center">
-          <div class="text-3xl mb-3">💰</div>
-          <h3 class="font-semibold text-gray-800 mb-2">
-            Gestión de Descuentos
-          </h3>
-          <p class="text-gray-600 text-sm">
-            Aplica descuentos y visualiza el impacto en tus ganancias
-          </p>
-        </div>
-        <div class="bg-white rounded-lg shadow-md p-6 text-center">
-          <div class="text-3xl mb-3">🎯</div>
-          <h3 class="font-semibold text-gray-800 mb-2">Fácil de Usar</h3>
-          <p class="text-gray-600 text-sm">
-            Interface intuitiva para cálculos rápidos y eficientes
-          </p>
-        </div>
+      <!-- Clear Button -->
+      <div class="mt-6 text-center">
+        <button
+          type="button"
+          id="clear-form"
+          class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-lg transition duration-200"
+        >
+          Limpiar
+        </button>
       </div>
     </div>
 
-    <script>
-      // Elementos del DOM
-      const costPriceInput = document.getElementById("cost-price");
-      const profitPercentageInput =
-        document.getElementById("profit-percentage");
-      const discountPercentageInput = document.getElementById(
-        "discount-percentage"
-      );
-      const calculateSalePriceBtn = document.getElementById(
-        "calculate-sale-price"
-      );
-      const calculateDiscountBtn =
-        document.getElementById("calculate-discount");
-      const clearFormBtn = document.getElementById("clear-form");
-      const discountSection = document.getElementById("discount-section");
-      const resultsSection = document.getElementById("results");
-      const discountResult = document.getElementById("discount-result");
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 max-w-4xl mx-auto">
+      <div class="bg-white rounded-lg shadow-md p-6 text-center">
+        <div class="text-3xl mb-3">📊</div>
+        <h3 class="font-semibold text-gray-800 mb-2">Cálculo Preciso</h3>
+        <p class="text-gray-600 text-sm">
+          Calcula precios de venta con márgenes de ganancia exactos
+        </p>
+      </div>
+      <div class="bg-white rounded-lg shadow-md p-6 text-center">
+        <div class="text-3xl mb-3">💰</div>
+        <h3 class="font-semibold text-gray-800 mb-2">Gestión de Descuentos</h3>
+        <p class="text-gray-600 text-sm">
+          Aplica descuentos y visualiza el impacto en tus ganancias
+        </p>
+      </div>
+      <div class="bg-white rounded-lg shadow-md p-6 text-center">
+        <div class="text-3xl mb-3">🎯</div>
+        <h3 class="font-semibold text-gray-800 mb-2">Fácil de Usar</h3>
+        <p class="text-gray-600 text-sm">
+          Interface intuitiva para cálculos rápidos y eficientes
+        </p>
+      </div>
+    </div>
+  </div>
 
-      // Elementos de resultados
-      const resultCost = document.getElementById("result-cost");
-      const resultProfit = document.getElementById("result-profit");
-      const resultSalePrice = document.getElementById("result-sale-price");
-      const resultDiscount = document.getElementById("result-discount");
-      const resultFinalPrice = document.getElementById("result-final-price");
+  <script>
+    // Elementos del DOM
+    const costPriceInput = document.getElementById("cost-price");
+    const profitPercentageInput = document.getElementById("profit-percentage");
+    const discountPercentageInput = document.getElementById(
+      "discount-percentage"
+    );
+    const calculateSalePriceBtn = document.getElementById(
+      "calculate-sale-price"
+    );
+    const calculateDiscountBtn = document.getElementById("calculate-discount");
+    const clearFormBtn = document.getElementById("clear-form");
+    const discountSection = document.getElementById("discount-section");
+    const resultsSection = document.getElementById("results");
+    const discountResult = document.getElementById("discount-result");
 
-      // Función para formatear moneda
-      function formatCurrency(amount) {
-        return new Intl.NumberFormat("es-CO", {
-          style: "currency",
-          currency: "EUR",
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 2,
-        }).format(amount);
+    // Elementos de resultados
+    const resultCost = document.getElementById("result-cost");
+    const resultProfit = document.getElementById("result-profit");
+    const resultSalePrice = document.getElementById("result-sale-price");
+    const resultDiscount = document.getElementById("result-discount");
+    const resultFinalPrice = document.getElementById("result-final-price");
+
+    // Función para formatear moneda
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat("es-CO", {
+        style: "currency",
+        currency: "EUR",
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      }).format(amount);
+    }
+
+    // Función para calcular precio de venta
+    function calculateSalePrice() {
+      const costPrice = parseFloat(costPriceInput.value) || 0;
+      const profitPercentage = parseFloat(profitPercentageInput.value) || 0;
+
+      if (costPrice <= 0) {
+        alert("Por favor ingrese un precio de costo válido");
+        return;
       }
 
-      // Función para calcular precio de venta
-      function calculateSalePrice() {
-        const costPrice = parseFloat(costPriceInput.value) || 0;
-        const profitPercentage = parseFloat(profitPercentageInput.value) || 0;
-
-        if (costPrice <= 0) {
-          alert("Por favor ingrese un precio de costo válido");
-          return;
-        }
-
-        if (profitPercentage < 0) {
-          alert("El porcentaje de ganancia no puede ser negativo");
-          return;
-        }
-
-        const profit = costPrice * (profitPercentage / 100);
-        const salePrice = costPrice + profit;
-
-        // Mostrar resultados
-        resultCost.textContent = formatCurrency(costPrice);
-        resultProfit.textContent = formatCurrency(profit);
-        resultSalePrice.textContent = formatCurrency(salePrice);
-
-        resultsSection.classList.remove("hidden");
-        discountResult.classList.add("hidden");
-        discountSection.classList.add("hidden");
+      if (profitPercentage < 0) {
+        alert("El porcentaje de ganancia no puede ser negativo");
+        return;
       }
 
-      // Función para calcular con descuento
-      function calculateWithDiscount() {
-        const costPrice = parseFloat(costPriceInput.value) || 0;
-        const profitPercentage = parseFloat(profitPercentageInput.value) || 0;
-        const discountPercentage =
-          parseFloat(discountPercentageInput.value) || 0;
+      const profit = costPrice * (profitPercentage / 100);
+      const salePrice = costPrice + profit;
 
-        if (costPrice <= 0) {
-          alert("Por favor ingrese un precio de costo válido");
-          return;
-        }
+      // Mostrar resultados
+      resultCost.textContent = formatCurrency(costPrice);
+      resultProfit.textContent = formatCurrency(profit);
+      resultSalePrice.textContent = formatCurrency(salePrice);
 
-        if (profitPercentage < 0) {
-          alert("El porcentaje de ganancia no puede ser negativo");
-          return;
-        }
+      resultsSection.classList.remove("hidden");
+      discountResult.classList.add("hidden");
+      discountSection.classList.add("hidden");
+    }
 
-        if (discountPercentage < 0 || discountPercentage > 100) {
-          alert("El porcentaje de descuento debe estar entre 0 y 100");
-          return;
-        }
+    // Función para calcular con descuento
+    function calculateWithDiscount() {
+      const costPrice = parseFloat(costPriceInput.value) || 0;
+      const profitPercentage = parseFloat(profitPercentageInput.value) || 0;
+      const discountPercentage = parseFloat(discountPercentageInput.value) || 0;
 
-        const profit = costPrice * (profitPercentage / 100);
-        const salePrice = costPrice + profit;
-        const discount = salePrice * (discountPercentage / 100);
-        const finalPrice = salePrice - discount;
-
-        // Mostrar resultados
-        resultCost.textContent = formatCurrency(costPrice);
-        resultProfit.textContent = formatCurrency(profit);
-        resultSalePrice.textContent = formatCurrency(salePrice);
-        resultDiscount.textContent = formatCurrency(discount);
-        resultFinalPrice.textContent = formatCurrency(finalPrice);
-
-        resultsSection.classList.remove("hidden");
-        discountResult.classList.remove("hidden");
+      if (costPrice <= 0) {
+        alert("Por favor ingrese un precio de costo válido");
+        return;
       }
 
-      // Función para mostrar sección de descuento
-      function showDiscountSection() {
-        discountSection.classList.remove("hidden");
+      if (profitPercentage < 0) {
+        alert("El porcentaje de ganancia no puede ser negativo");
+        return;
       }
 
-      // Función para limpiar formulario
-      function clearForm() {
-        costPriceInput.value = "";
-        profitPercentageInput.value = "20";
-        discountPercentageInput.value = "";
-        resultsSection.classList.add("hidden");
-        discountSection.classList.add("hidden");
-        discountResult.classList.add("hidden");
+      if (discountPercentage < 0 || discountPercentage > 100) {
+        alert("El porcentaje de descuento debe estar entre 0 y 100");
+        return;
       }
 
-      // Event listeners
-      calculateSalePriceBtn.addEventListener("click", calculateSalePrice);
-      //   calculateDiscountBtn.addEventListener("click", () => {
-      //     showDiscountSection();
-      //     calculateWithDiscount();
-      //   });
-      clearFormBtn.addEventListener("click", clearForm);
+      const profit = costPrice * (profitPercentage / 100);
+      const salePrice = costPrice + profit;
+      const discount = salePrice * (discountPercentage / 100);
+      const finalPrice = salePrice - discount;
 
-      // Permitir cálculo con Enter en los inputs
-      [costPriceInput, profitPercentageInput].forEach((input) => {
-        input.addEventListener("keypress", (e) => {
-          if (e.key === "Enter") {
-            calculateSalePrice();
-          }
-        });
-      });
+      // Mostrar resultados
+      resultCost.textContent = formatCurrency(costPrice);
+      resultProfit.textContent = formatCurrency(profit);
+      resultSalePrice.textContent = formatCurrency(salePrice);
+      resultDiscount.textContent = formatCurrency(discount);
+      resultFinalPrice.textContent = formatCurrency(finalPrice);
 
-      discountPercentageInput.addEventListener("keypress", (e) => {
+      resultsSection.classList.remove("hidden");
+      discountResult.classList.remove("hidden");
+    }
+
+    // Función para mostrar sección de descuento
+    function showDiscountSection() {
+      discountSection.classList.remove("hidden");
+    }
+
+    // Función para limpiar formulario
+    function clearForm() {
+      costPriceInput.value = "";
+      profitPercentageInput.value = "20";
+      discountPercentageInput.value = "";
+      resultsSection.classList.add("hidden");
+      discountSection.classList.add("hidden");
+      discountResult.classList.add("hidden");
+    }
+
+    // Event listeners
+    calculateSalePriceBtn.addEventListener("click", calculateSalePrice);
+    //   calculateDiscountBtn.addEventListener("click", () => {
+    //     showDiscountSection();
+    //     calculateWithDiscount();
+    //   });
+    clearFormBtn.addEventListener("click", clearForm);
+
+    // Permitir cálculo con Enter en los inputs
+    [costPriceInput, profitPercentageInput].forEach((input) => {
+      input.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
-          calculateWithDiscount();
+          calculateSalePrice();
         }
       });
-    </script>
-  </body>
-</html>
+    });
+
+    discountPercentageInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        calculateWithDiscount();
+      }
+    });
+  </script>
+</Layout>
