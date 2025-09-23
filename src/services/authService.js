@@ -6,8 +6,8 @@
 export class AuthService {
   // Configuración de usuarios (temporal - puede ser reemplazado por API externa)
   static users = [
-    { username: 'admin', password: 'admin123', name: 'Administrador' },
-    { username: 'usuario', password: 'user123', name: 'Usuario Demo' }
+    { username: "admin", password: "admin123", name: "Administrador" },
+    { username: "usuario", password: "user123", name: "Usuario Demo" },
   ];
 
   /**
@@ -19,34 +19,39 @@ export class AuthService {
   static async login(username, password) {
     try {
       // Simular delay de API (puede ser removido en implementación real)
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Validar credenciales
-      const user = this.users.find(u => u.username === username && u.password === password);
-      
+      const user = this.users.find(
+        (u) => u.username === username && u.password === password,
+      );
+
       if (user) {
         // Guardar sesión en localStorage
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('currentUser', JSON.stringify({
-          username: user.username,
-          name: user.name
-        }));
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem(
+          "currentUser",
+          JSON.stringify({
+            username: user.username,
+            name: user.name,
+          }),
+        );
 
         return {
           success: true,
           user: { username: user.username, name: user.name },
-          message: 'Login exitoso'
+          message: "Login exitoso",
         };
       } else {
         return {
           success: false,
-          message: 'Credenciales incorrectas'
+          message: "Credenciales incorrectas",
         };
       }
     } catch (error) {
       return {
         success: false,
-        message: 'Error en el servidor'
+        message: "Error en el servidor",
       };
     }
   }
@@ -55,8 +60,8 @@ export class AuthService {
    * Cierra la sesión del usuario actual
    */
   static logout() {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("currentUser");
   }
 
   /**
@@ -64,7 +69,7 @@ export class AuthService {
    * @returns {boolean}
    */
   static isAuthenticated() {
-    return localStorage.getItem('isLoggedIn') === 'true';
+    return localStorage.getItem("isLoggedIn") === "true";
   }
 
   /**
@@ -72,7 +77,7 @@ export class AuthService {
    * @returns {object|null}
    */
   static getCurrentUser() {
-    const userStr = localStorage.getItem('currentUser');
+    const userStr = localStorage.getItem("currentUser");
     return userStr ? JSON.parse(userStr) : null;
   }
 
@@ -80,10 +85,10 @@ export class AuthService {
    * Verifica autenticación y redirige si es necesario
    * @param {string} redirectUrl - URL de redirección si no está autenticado
    */
-  static requireAuth(redirectUrl = '/login') {
+  static requireAuth(redirectUrl = "/login") {
     if (!this.isAuthenticated()) {
       window.location.href = redirectUrl;
-      throw new Error('No autorizado');
+      throw new Error("No autorizado");
     }
   }
 
@@ -91,7 +96,7 @@ export class AuthService {
    * Actualiza la información del usuario en la UI
    * @param {string} containerId - ID del contenedor donde mostrar la info
    */
-  static updateUserInfo(containerId = 'userInfo') {
+  static updateUserInfo(containerId = "userInfo") {
     const container = document.getElementById(containerId);
     if (!container) return;
 
@@ -105,15 +110,15 @@ export class AuthService {
       `;
 
       // Agregar event listener al botón de logout
-      const logoutBtn = document.getElementById('logoutBtn');
+      const logoutBtn = document.getElementById("logoutBtn");
       if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
+        logoutBtn.addEventListener("click", () => {
           this.logout();
-          window.location.href = '/login';
+          window.location.href = "/login";
         });
       }
     } else {
-      container.innerHTML = '';
+      container.innerHTML = "";
     }
   }
 }
