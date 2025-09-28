@@ -281,7 +281,6 @@ const categories = await categoryService.loadCategories();
     const productService = new ProductService();
     await productService.loadProducts();
 
-
     // Clase para manejar la interfaz de usuario
     class ProductUI {
       productService;
@@ -321,7 +320,7 @@ const categories = await categoryService.loadCategories();
           // Actualizar producto existente
           await this.productService.updateProduct(
             this.productService.getEditingId(),
-            productData,
+            productData
           );
           this.productService.cancelEdit();
           document.getElementById("add-product-btn").textContent =
@@ -351,7 +350,8 @@ const categories = await categoryService.loadCategories();
         const product = this.productService.setEditingProduct(id);
         if (product) {
           document.getElementById("product-name").value = product.name;
-          document.getElementById("product-category").value = product.category_id;
+          document.getElementById("product-category").value =
+            product.category_id;
           document.getElementById("product-cost").value = product.cost;
           document.getElementById("product-price").value = product.price;
           document.getElementById("product-description").value =
@@ -392,7 +392,7 @@ const categories = await categoryService.loadCategories();
       // Renderizar tabla de productos
       renderProducts() {
         const filteredProducts = this.filterProducts();
-        
+
         const tbody = document.getElementById("products-table-body");
         const emptyState = document.getElementById("empty-state");
         const productsCount = document.getElementById("products-count");
@@ -408,10 +408,11 @@ const categories = await categoryService.loadCategories();
         emptyState.classList.add("hidden");
 
         tbody.innerHTML = filteredProducts
+          .sort((a, b) => a.name.localeCompare(b.name))
           .map((product) => {
             const margin = this.productService.calculateMargin(
               product.cost,
-              product.price,
+              product.price
             );
             const marginClass =
               margin > 30
